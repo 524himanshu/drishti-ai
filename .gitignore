@@ -1,0 +1,40 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# Environment variables - NEVER commit these
+.env
+*.env
+
+# ML Models cache - too large for git
+.cache/
+huggingface/
+transformers_cache/
+
+# Database
+*.db
+*.sqlite
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Node
+node_modules/
+.next/
+npm-debug.log
+
+# Docker
+postgres_data/

@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+redis
+python-dotenv
+praw
+requests
+apscheduler
+scispacy
+spacy
+presidio-analyzer
+presidio-anonymizer
+transformers
+torch
+shap
+httpx
