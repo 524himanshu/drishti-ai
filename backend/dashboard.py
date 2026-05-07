@@ -3,7 +3,7 @@ import requests
 import plotly.express as px
 import pandas as pd
 
-API = "http://127.0.0.1:8000"
+API = "https://your-railway-url.up.railway.app"
 
 st.set_page_config(page_title="DrishtiAI", page_icon="🔬", layout="wide")
 st.title("🔬 DrishtiAI — Patient Safety Signal Intelligence")

@@ -1,5 +1,6 @@
 fastapi
 uvicorn
+gunicorn
 sqlalchemy
 psycopg2-binary
 redis
@@ -13,5 +14,7 @@ presidio-analyzer
 presidio-anonymizer
 transformers
 torch
-shap
 httpx
+duckduckgo-search
+plotly
+streamlit
