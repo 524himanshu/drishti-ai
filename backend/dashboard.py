@@ -52,7 +52,36 @@ if trends:
     st.plotly_chart(fig, use_container_width=True)
 
 st.divider()
+st.subheader("🤖 Agentic Source Discovery")
+st.caption("AI agent discovers new monitoring sources automatically")
 
+topic = st.text_input(
+    "Enter health topic to discover sources for:",
+    value="ozempic side effects India"
+)
+
+if st.button("🔍 Discover Sources"):
+    with st.spinner("Agent searching the web for relevant communities..."):
+        r = requests.get(f"{API}/discover?topic={topic}")
+        sources = r.json().get("discovered", [])
+
+    st.success(f"Discovered {len(sources)} potential sources")
+
+    for src in sources:
+        with st.container():
+            col1, col2, col3 = st.columns([3, 1, 1])
+            with col1:
+                st.markdown(f"**{src['title'][:60]}**")
+                st.caption(src['domain'])
+                st.write(src['snippet'])
+            with col2:
+                badge = "🟢 Forum" if src['is_forum'] else "🔵 Web"
+                st.write(badge)
+                st.caption(src['suggested_engine'])
+            with col3:
+                if st.button("✅ Add to Project", key=src['domain']):
+                    st.success("Added!")
+            st.divider()
 # ── SIGNAL FEED ────────────────────────────────────────
 st.subheader("📡 Signal Feed")
 

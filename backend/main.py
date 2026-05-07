@@ -52,3 +52,14 @@ def get_posts(db: Session = Depends(get_db)):
 def process_posts(db: Session = Depends(get_db)):
     result = process_unprocessed_posts(db)
     return result   
+
+from engines.agent_discovery import discover_sources
+
+@app.get("/discover")
+def discover_new_sources(topic: str = "diabetes medication side effects"):
+    results = discover_sources(topic)
+    return {
+        "topic": topic,
+        "discovered": results,
+        "total": len(results)
+    }
