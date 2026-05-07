@@ -46,8 +46,8 @@ venv\Scripts\python.exe -m streamlit run dashboard.py
 - `GET /signals/trends` — trend data for charts
 
 ## 👨‍💻 Contributors
-https://github.com/524himanshu/
-https://github.com/sahasweety
+- https://github.com/524himanshu/
+- https://github.com/sahasweety
 
 ## Team
 DrishtiAI — AI for Bharat 2026, Theme 6
