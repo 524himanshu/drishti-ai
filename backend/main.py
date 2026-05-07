@@ -63,3 +63,11 @@ def discover_new_sources(topic: str = "diabetes medication side effects"):
         "discovered": results,
         "total": len(results)
     }
+    
+@app.get("/")
+def root():
+    return {
+        "project": "DrishtiAI",
+        "status": "running",
+        "docs": "/docs"
+    }
