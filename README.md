@@ -63,11 +63,11 @@ venv\Scripts\python.exe -m streamlit run dashboard.py
 ```
 
 ### Environment Variables
-DATABASE_URL=postgresql://drishti:drishti123@127.0.0.1:5433/drishtidb
-REDIS_URL=redis://localhost:6379
-TWITTER_API_KEY=your_twitterapi_io_key
-REDDIT_CLIENT_ID=your_reddit_client_id
-REDDIT_CLIENT_SECRET=your_reddit_client_secret
+- DATABASE_URL=postgresql://drishti:drishti123@127.0.0.1:5433/drishtidb
+- REDIS_URL=redis://localhost:6379
+- TWITTER_API_KEY=your_twitterapi_io_key
+- REDDIT_CLIENT_ID=your_reddit_client_id
+- REDDIT_CLIENT_SECRET=your_reddit_client_secret
 
 ## API Endpoints
 | Method | Endpoint | Description |
