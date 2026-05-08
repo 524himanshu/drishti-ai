@@ -2,6 +2,14 @@
 
 Real-time social listening platform that monitors Twitter, Reddit, and online forums for patient-reported adverse drug events and safety signals — surfacing risks weeks before they appear in formal pharmacovigilance reports.
 
+Updated working links:
+
+Dashboard:
+https://drishti-ai-1.onrender.com
+
+API Docs:
+https://drishti-ai-szyx.onrender.com/docs
+
 ## What It Does
 - Ingests tweets and posts mentioning drugs, symptoms, and conditions in real time
 - Runs a 4-stage biomedical NLP pipeline: entity extraction → sentiment → adverse event detection → PII flagging
