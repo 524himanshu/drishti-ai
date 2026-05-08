@@ -10,7 +10,13 @@ st.title("🔬 DrishtiAI — Patient Safety Signal Intelligence")
 st.caption("Real-time social listening for adverse drug event detection")
 
 # ── STATS ROW ──────────────────────────────────────────
-stats = requests.get(f"{API}/signals/stats").json()
+try:
+    response = requests.get(f"{API}/signals/stats", timeout=30)
+    response.raise_for_status()
+    stats = response.json()
+except Exception as e:
+    st.error(f"Backend connection failed: {e}")
+    st.stop()
 
 col1, col2, col3, col4 = st.columns(4)
 col1.metric("Total Posts", stats["total_posts"])
