@@ -1,15 +1,8 @@
 import spacy
-from typing import List, Dict
+from typing import Dict
 
-# Load the biomedical model once at module level
-# Loading it per-request would be extremely slow
-try:
-    nlp = spacy.load("en_core_sci_sm")
-except OSError:
-    print("WARNING: en_core_sci_sm not found, falling back to en_core_web_sm")
-    nlp = spacy.load("en_core_web_sm")
+nlp = None
 
-# Medical entity categories we care about
 DRUG_KEYWORDS = [
     "metformin", "ozempic", "semaglutide", "insulin", "lisinopril",
     "atorvastatin", "omeprazole", "amoxicillin", "ibuprofen", "aspirin",
@@ -22,12 +15,29 @@ SYMPTOM_KEYWORDS = [
     "insomnia", "anxiety", "depression", "shortness of breath", "chest pain"
 ]
 
+def get_nlp():
+    global nlp
+
+    if nlp is None:
+        print("Loading biomedical model...")
+
+        try:
+            nlp = spacy.load("en_core_sci_sm")
+        except OSError:
+            print("WARNING: en_core_sci_sm not found, falling back to en_core_web_sm")
+            nlp = spacy.load("en_core_web_sm")
+
+        print("Biomedical model loaded.")
+
+    return nlp
+
+
 def extract_entities(text: str) -> Dict:
-    doc = nlp(text)
+    model = get_nlp()
+    doc = model(text)
 
     entities = []
 
-    # scispaCy entities
     for ent in doc.ents:
         entities.append({
             "text": ent.text,
@@ -36,7 +46,6 @@ def extract_entities(text: str) -> Dict:
             "end": ent.end_char
         })
 
-    # Keyword-based drug detection (catches brand names scispaCy might miss)
     text_lower = text.lower()
     drugs_found = [drug for drug in DRUG_KEYWORDS if drug in text_lower]
     symptoms_found = [sym for sym in SYMPTOM_KEYWORDS if sym in text_lower]
