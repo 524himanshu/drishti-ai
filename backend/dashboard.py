@@ -3,7 +3,9 @@ import requests
 import plotly.express as px
 import pandas as pd
 
-API = "https://drishti-ai-szyx.onrender.com"
+import os
+
+API = os.getenv("API_URL", "http://127.0.0.1:8000")
 
 st.set_page_config(page_title="DrishtiAI", page_icon="🔬", layout="wide")
 st.title("🔬 DrishtiAI — Patient Safety Signal Intelligence")
