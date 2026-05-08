@@ -2,24 +2,7 @@ from presidio_analyzer import AnalyzerEngine
 from presidio_analyzer.nlp_engine import NlpEngineProvider
 from typing import Dict
 
-print("Loading PII analyzer...")
-
-configuration = {
-    "nlp_engine_name": "spacy",
-    "models": [
-        {
-            "lang_code": "en",
-            "model_name": "en_core_web_sm"
-        }
-    ],
-}
-
-provider = NlpEngineProvider(nlp_configuration=configuration)
-nlp_engine = provider.create_engine()
-
-analyzer = AnalyzerEngine(nlp_engine=nlp_engine)
-
-print("PII analyzer loaded.")
+analyzer = None
 
 INDIAN_PII_ENTITIES = [
     "PERSON",
@@ -30,9 +13,36 @@ INDIAN_PII_ENTITIES = [
     "MEDICAL_LICENSE"
 ]
 
+def get_analyzer():
+    global analyzer
+
+    if analyzer is None:
+        print("Loading PII analyzer...")
+
+        configuration = {
+            "nlp_engine_name": "spacy",
+            "models": [
+                {
+                    "lang_code": "en",
+                    "model_name": "en_core_web_sm"
+                }
+            ],
+        }
+
+        provider = NlpEngineProvider(nlp_configuration=configuration)
+        nlp_engine = provider.create_engine()
+        analyzer = AnalyzerEngine(nlp_engine=nlp_engine)
+
+        print("PII analyzer loaded.")
+
+    return analyzer
+
+
 def detect_pii(text: str) -> Dict:
     try:
-        results = analyzer.analyze(
+        analyzer_instance = get_analyzer()
+
+        results = analyzer_instance.analyze(
             text=text,
             entities=INDIAN_PII_ENTITIES,
             language="en"
@@ -48,6 +58,7 @@ def detect_pii(text: str) -> Dict:
 
     except Exception as e:
         print(f"PII detection error: {e}")
+
         return {
             "has_pii": False,
             "pii_types": []
