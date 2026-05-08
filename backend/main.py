@@ -70,4 +70,5 @@ def root():
         "project": "DrishtiAI",
         "status": "running",
         "docs": "/docs"
+        "health": "/health"
     }
