@@ -3,7 +3,7 @@ import requests
 import plotly.express as px
 import pandas as pd
 
-API = "https://drishti-ai-production-10e9.up.railway.app/"
+API = "https://drishti-ai-szyx.onrender.com"
 
 st.set_page_config(page_title="DrishtiAI", page_icon="🔬", layout="wide")
 st.title("🔬 DrishtiAI — Patient Safety Signal Intelligence")
