@@ -1,44 +1,51 @@
-from transformers import pipeline
 from typing import Dict
 
-sentiment_pipeline = None
+NEGATIVE_WORDS = [
+    "pain",
+    "nausea",
+    "vomiting",
+    "dizziness",
+    "rash",
+    "fatigue",
+    "headache",
+    "swelling",
+    "fever",
+    "diarrhea",
+    "hospital",
+    "reaction",
+    "adverse",
+    "side effect",
+    "shortness of breath"
+]
 
-def get_sentiment_pipeline():
-    global sentiment_pipeline
-
-    if sentiment_pipeline is None:
-        print("Loading sentiment model...")
-
-        sentiment_pipeline = pipeline(
-            "sentiment-analysis",
-            model="cardiffnlp/twitter-roberta-base-sentiment-latest",
-            truncation=True,
-            max_length=512
-        )
-
-        print("Sentiment model loaded.")
-
-    return sentiment_pipeline
+POSITIVE_WORDS = [
+    "better",
+    "improved",
+    "helped",
+    "effective",
+    "working"
+]
 
 
 def analyze_sentiment(text: str) -> Dict:
-    try:
-        pipeline_instance = get_sentiment_pipeline()
+    text_lower = text.lower()
 
-        result = pipeline_instance(text[:512])[0]
+    neg_score = sum(1 for word in NEGATIVE_WORDS if word in text_lower)
+    pos_score = sum(1 for word in POSITIVE_WORDS if word in text_lower)
 
-        label = result["label"].lower()
-        score = result["score"]
-
+    if neg_score > pos_score:
         return {
-            "sentiment": label,
-            "sentiment_score": round(score, 4)
+            "sentiment": "negative",
+            "sentiment_score": 0.85
         }
 
-    except Exception as e:
-        print(f"Sentiment error: {e}")
-
+    elif pos_score > neg_score:
         return {
-            "sentiment": "neutral",
-            "sentiment_score": 0.5
+            "sentiment": "positive",
+            "sentiment_score": 0.8
         }
+
+    return {
+        "sentiment": "neutral",
+        "sentiment_score": 0.5
+    }

@@ -1,65 +1,20 @@
-from presidio_analyzer import AnalyzerEngine
-from presidio_analyzer.nlp_engine import NlpEngineProvider
+import re
 from typing import Dict
 
-analyzer = None
-
-INDIAN_PII_ENTITIES = [
-    "PERSON",
-    "PHONE_NUMBER",
-    "EMAIL_ADDRESS",
-    "LOCATION",
-    "DATE_TIME",
-    "MEDICAL_LICENSE"
-]
-
-def get_analyzer():
-    global analyzer
-
-    if analyzer is None:
-        print("Loading PII analyzer...")
-
-        configuration = {
-            "nlp_engine_name": "spacy",
-            "models": [
-                {
-                    "lang_code": "en",
-                    "model_name": "en_core_web_sm"
-                }
-            ],
-        }
-
-        provider = NlpEngineProvider(nlp_configuration=configuration)
-        nlp_engine = provider.create_engine()
-        analyzer = AnalyzerEngine(nlp_engine=nlp_engine)
-
-        print("PII analyzer loaded.")
-
-    return analyzer
+EMAIL_REGEX = r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
+PHONE_REGEX = r'\b\d{10}\b'
 
 
 def detect_pii(text: str) -> Dict:
-    try:
-        analyzer_instance = get_analyzer()
+    pii_types = []
 
-        results = analyzer_instance.analyze(
-            text=text,
-            entities=INDIAN_PII_ENTITIES,
-            language="en"
-        )
+    if re.search(EMAIL_REGEX, text):
+        pii_types.append("EMAIL")
 
-        has_pii = len(results) > 0
-        pii_types = list(set([r.entity_type for r in results]))
+    if re.search(PHONE_REGEX, text):
+        pii_types.append("PHONE")
 
-        return {
-            "has_pii": has_pii,
-            "pii_types": pii_types
-        }
-
-    except Exception as e:
-        print(f"PII detection error: {e}")
-
-        return {
-            "has_pii": False,
-            "pii_types": []
-        }
+    return {
+        "has_pii": len(pii_types) > 0,
+        "pii_types": pii_types
+    }
