@@ -69,6 +69,6 @@ def root():
     return {
         "project": "DrishtiAI",
         "status": "running",
-        "docs": "/docs"
+        "docs": "/docs",
         "health": "/health"
     }
