@@ -123,6 +123,7 @@ venv\Scripts\python.exe -m streamlit run dashboard.py
 - `REDIS_URL` = Local Redis URL, or Render Key-Value internal URL.
 - `TWITTER_API_KEY` = Optional premium Twitter API key (from twitterapi.io).
 - `REDDIT_USER_AGENT` = Custom user agent header (e.g. `DrishtiAI/1.0`) to retrieve live Reddit posts for free without API keys.
+- `GEMINI_API_KEY` = Optional Google Gemini API key to enable generative Clinical Safety Summary Reports.
 
 ## Ingestion Engines
 1. **Reddit Engine (Public Search API)**: A 100% free search index querying public subreddits for side-effects and drug reviews in real-time. Requires no registration or credentials.
@@ -136,6 +137,7 @@ venv\Scripts\python.exe -m streamlit run dashboard.py
 | GET | `/signals/feed` | Signal feed with full NLP results |
 | GET | `/signals/stats` | Summary statistics |
 | GET | `/signals/trends` | Trend data for charts |
+| GET | `/signals/report` | Synthesize clinical safety warning reports |
 | GET | `/discover` | Agentic source discovery |
 
 ## India-Specific Design
