@@ -2,15 +2,15 @@ import re
 from typing import Dict
 
 EMAIL_REGEX = r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'
-PHONE_REGEX = r'(?:\+91[\-\s]?)?[6-9]\d{9}\b|\b\d{10}\b|\b\+91\s\d{5}[-\s]?\d{5}\b'
+PHONE_REGEX = r'\+?91[\-\s]?\d{5}[\-\s]?\d{5}\b|\b\d{5}[\-\s]?\d{5}\b|\b\d{10}\b'
 AADHAAR_REGEX = r'\b\d{4}[-\s]?\d{4}[-\s]?\d{4}\b'
 
-# Heuristic name patterns
+# Heuristic name patterns with lookahead to prevent Dr vs doctor collision
 NAME_PATTERNS = [
+    (r'(?i)Dr\.\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)', "Dr. [REDACTED NAME]"),
+    (r'(?i)doctor\s+(?!Dr\b)([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)', "doctor [REDACTED NAME]"),
     (r'(?i)my name is\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)', "[REDACTED NAME]"),
     (r'(?i)i am\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)', "[REDACTED NAME]"),
-    (r'(?i)Dr\.\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)', "Dr. [REDACTED NAME]"),
-    (r'(?i)doctor\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)', "doctor [REDACTED NAME]"),
 ]
 
 def detect_pii(text: str) -> Dict:
