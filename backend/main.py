@@ -113,6 +113,24 @@ def startup():
 def health():
     return {"status": "ok"}
 
+@app.get("/cleanup")
+def cleanup(db: Session = Depends(get_db)):
+    # Delete legacy seeds
+    legacy_seeds = db.query(Post).filter(
+        (Post.raw_id.like("seed_%")) | (Post.raw_id.like("tw_%"))
+    ).all()
+    if legacy_seeds:
+        for p in legacy_seeds:
+            db.delete(p)
+        db.commit()
+        
+    # Re-run seeder
+    seed_database(db)
+    return {
+        "status": "success", 
+        "message": "Legacy mock data deleted and re-seeded with updated PII masking rules."
+    }
+
 @app.post("/ingest/test")
 def test_ingest(db: Session = Depends(get_db)):
     keywords = ["metformin nausea", "ozempic side effects", "drug reaction", "adverse reaction medication", "hospitalized after taking"]
