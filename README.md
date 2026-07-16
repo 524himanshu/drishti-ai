@@ -78,11 +78,13 @@ graph TD
 ### System Component Breakdown
 1. **Data Sources**: Multi-channel listening inputs pulling from the public Reddit search engine, Twitter API, and direct web scrapers.
 2. **Ingestion & Storage**: A plugin-based ingestion framework executing database transactions via PostgreSQL. Includes Redis task queuing for background worker concurrency.
-3. **Biomedical NLP Pipeline**: A multi-stage processing pipeline:
-   * **scispaCy**: Named Entity Recognition (NER) to extract medical entities like drugs, symptoms, and dosages.
-   * **RoBERTa**: Sentiment classifier to rank patient-reported frustrations.
-   * **Adverse Event (AE) Detection**: Core classifier that tags posts showing critical adverse drug events.
-   * **Microsoft Presidio**: Replaces sensitive identifiers (Aadhaar cards, phone numbers, personal names) with redacted masks to fulfill DPDP compliance.
+3. **Biomedical NLP Pipeline**: A hybrid, dual-mode processing pipeline designed for enterprise scale:
+   * **Production Mode (Local / High-Resource)**:
+     * **SpaCy (en_core_web_sm)**: Performs dynamic Named Entity Recognition (NER) and Part-of-Speech (POS) parsing to identify drugs, organizations, products, and symptoms.
+     * **Microsoft Presidio (Analyzer & Anonymizer)**: Automatically scans, scores, and redacts sensitive PII identifiers (names, emails, contacts).
+   * **Resource-Constrained Mode (Render Free Tier Fallback)**:
+     * Automatically shifts to high-speed **regex-based PII masking** (supporting Indian Aadhaar numbers, international phone formats like `+91 98234-56789`, emails) and **keyword-matching NER** to prevent Out-Of-Memory (OOM) crashes on 512MB RAM limits.
+   * **Adverse Event (AE) Classifier**: Runs a classification matrix (symptom-drug co-occurrence, negative sentiment score, adverse signal patterns) to flag patient safety reports.
 4. **Visualization Layer**: Interactive Streamlit Dashboard rendering live signal feeds, trend charts, and source discovery actions.
 
 ## Setup
