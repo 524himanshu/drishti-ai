@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from database import engine, Base, get_db
 from models.post import Post
 from engines.twitter import TwitterEngine
+from engines.reddit import RedditEngine
 from ingestion import save_posts
 
 app = FastAPI(title="DrishtiAI", version="1.0")
@@ -21,11 +22,15 @@ def health():
 
 @app.post("/ingest/test")
 def test_ingest(db: Session = Depends(get_db)):
-    engine_instance = TwitterEngine(
-        project_id="test-project",
-        keywords=["metformin nausea", "ozempic side effects", "drug reaction", "adverse reaction medication", "hospitalized after taking"]
-    )
-    posts = engine_instance.fetch(limit=20)
+    keywords = ["metformin nausea", "ozempic side effects", "drug reaction", "adverse reaction medication", "hospitalized after taking"]
+    
+    twitter_engine = TwitterEngine(project_id="test-project", keywords=keywords)
+    reddit_engine = RedditEngine(project_id="test-project", keywords=keywords)
+    
+    posts = []
+    posts.extend(twitter_engine.fetch(limit=10))
+    posts.extend(reddit_engine.fetch(limit=10))
+    
     result = save_posts(posts, db)
     return {
         "fetched": len(posts),
