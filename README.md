@@ -31,17 +31,59 @@ https://drishti-ai-szyx.onrender.com/docs
 Python, FastAPI, PostgreSQL, Redis, scispaCy, cardiffnlp RoBERTa, Microsoft Presidio, Streamlit, Plotly, twitterapi.io, PRAW, DuckDuckGo Search, APScheduler, Docker Compose
 
 ## Architecture
-Twitter / Reddit / Forums
-↓
-Source Engine (plugin architecture)
-↓
-PostgreSQL (raw posts)
-↓
-NLP Pipeline (scispaCy → RoBERTa → Presidio)
-↓
-Signal Intelligence (adverse events + SHAP explanations)
-↓
-Streamlit Dashboard
+
+```mermaid
+graph TD
+    %% Source Layer
+    subgraph Data Sources
+        TW[Twitter / X API Proxy]
+        RD[Reddit Public Search]
+        FM[Forum Scrapers]
+    end
+
+    %% Ingestion Layer
+    subgraph Ingestion Layer
+        SE[Source Engine / Plugins]
+        PG[(PostgreSQL Database)]
+        RD_Q[(Redis Task Queue)]
+    end
+
+    %% Processing Layer
+    subgraph Biomedical NLP Pipeline
+        NER[scispaCy en_core_sci_sm: Entity Extraction]
+        SEN[RoBERTa: Sentiment Analysis]
+        AE[Adverse Event Classifier]
+        PII[Microsoft Presidio: PII Redaction]
+    end
+
+    %% Presentation Layer
+    subgraph Visualization Layer
+        ST[Streamlit Live Dashboard]
+    end
+
+    %% Connections
+    TW --> SE
+    RD --> SE
+    FM --> SE
+    SE -->|Saves Raw Posts| PG
+    SE -->|Triggers Tasks| RD_Q
+    PG -->|Pulls Unprocessed| NER
+    NER -->|Extracts Drugs/Symptoms| SEN
+    SEN -->|Classifies Sentiment| AE
+    AE -->|Flags Safety Signals| PII
+    PII -->|Masks Sensitive Data| PG
+    PG -->|Queries Stats/Trends| ST
+```
+
+### System Component Breakdown
+1. **Data Sources**: Multi-channel listening inputs pulling from the public Reddit search engine, Twitter API, and direct web scrapers.
+2. **Ingestion & Storage**: A plugin-based ingestion framework executing database transactions via PostgreSQL. Includes Redis task queuing for background worker concurrency.
+3. **Biomedical NLP Pipeline**: A multi-stage processing pipeline:
+   * **scispaCy**: Named Entity Recognition (NER) to extract medical entities like drugs, symptoms, and dosages.
+   * **RoBERTa**: Sentiment classifier to rank patient-reported frustrations.
+   * **Adverse Event (AE) Detection**: Core classifier that tags posts showing critical adverse drug events.
+   * **Microsoft Presidio**: Replaces sensitive identifiers (Aadhaar cards, phone numbers, personal names) with redacted masks to fulfill DPDP compliance.
+4. **Visualization Layer**: Interactive Streamlit Dashboard rendering live signal feeds, trend charts, and source discovery actions.
 
 ## Setup
 
