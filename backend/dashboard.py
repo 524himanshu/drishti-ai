@@ -15,6 +15,47 @@ st.set_page_config(
 st.title("🔬 DrishtiAI — Patient Safety Signal Intelligence")
 st.caption("Real-time social listening for adverse drug event detection")
 
+# Custom Sleek CSS Styles for YC-grade Aesthetics
+st.markdown("""
+<style>
+    /* Metric Cards Styling */
+    [data-testid="stMetricValue"] {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #818cf8 !important;
+    }
+    div[data-testid="stMetric"] {
+        background-color: rgba(28, 28, 30, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        padding: 16px 20px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    }
+    /* Buttons Customization */
+    .stButton>button {
+        border-radius: 12px !important;
+        background-color: #0e0e11 !important;
+        border: 1px solid #1f1f2e !important;
+        font-weight: 600 !important;
+        color: #d1d5db !important;
+        transition: all 0.2s ease-in-out !important;
+    }
+    .stButton>button:hover {
+        border-color: #6366f1 !important;
+        color: #818cf8 !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    }
+    /* Containers and dividers */
+    .stAlert {
+        border-radius: 14px !important;
+    }
+    hr {
+        margin: 2em 0 !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+    }
+</style>
+""", unsafe_allow_html=True)
 
 # ---------------- API HELPER ----------------
 def safe_get(url, params=None, timeout=20):
