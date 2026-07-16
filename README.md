@@ -87,6 +87,10 @@ graph TD
 
 ## Setup
 
+> [!TIP]
+> **Note for Reviewers (Zero Setup Required)**: 
+> When the backend boots up for the first time against an empty database, it **automatically seeds 5 realistic patient adverse event posts** and processes them through the biomedical NLP pipeline (scispaCy + RoBERTa + Presidio). The Streamlit dashboard will be fully populated with charts, redacted PII metrics, and explanations out-of-the-box, without requiring you to set up any API keys or trigger manual ingestions!
+
 ### Prerequisites
 - Docker Desktop
 - Python 3.10+
