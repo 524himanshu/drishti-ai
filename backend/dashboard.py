@@ -162,24 +162,25 @@ if st.button("🔍 Discover Sources"):
         if not sources:
             st.info("No sources found.")
 
-        for src in sources:
+        for idx, src in enumerate(sources):
             with st.container():
                 col1, col2, col3 = st.columns([3, 1, 1])
 
                 with col1:
                     st.markdown(f"**{src.get('title', 'Untitled')}**")
-                    st.caption(src.get("domain", "unknown"))
+                    st.caption(f"{src.get('domain', 'unknown')} | {src.get('suggested_engine', 'unknown').upper()}")
                     st.write(src.get("snippet", ""))
+                    st.info(src.get("explanation", ""))
 
                 with col2:
                     badge = "🟢 Forum" if src.get("is_forum") else "🔵 Web"
                     st.write(badge)
-                    st.caption(src.get("suggested_engine", "unknown"))
+                    st.metric("Agent Score", f"{src.get('confidence_score', 0.5):.0%}")
 
                 with col3:
                     if st.button(
                         "✅ Add to Project",
-                        key=f"add_{src.get('domain', '')}"
+                        key=f"add_{idx}"
                     ):
                         st.success("Added!")
 
