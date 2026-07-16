@@ -71,11 +71,14 @@ venv\Scripts\python.exe -m streamlit run dashboard.py
 ```
 
 ### Environment Variables
-- DATABASE_URL=postgresql://drishti:drishti123@127.0.0.1:5433/drishtidb
-- REDIS_URL=redis://localhost:6379
-- TWITTER_API_KEY=your_twitterapi_io_key
-- REDDIT_CLIENT_ID=your_reddit_client_id
-- REDDIT_CLIENT_SECRET=your_reddit_client_secret
+- `DATABASE_URL` = Local postgres URL, or Render database URL (the app automatically converts public hostnames to internal hostnames to prevent SSL drops).
+- `REDIS_URL` = Local Redis URL, or Render Key-Value internal URL.
+- `TWITTER_API_KEY` = Optional premium Twitter API key (from twitterapi.io).
+- `REDDIT_USER_AGENT` = Custom user agent header (e.g. `DrishtiAI/1.0`) to retrieve live Reddit posts for free without API keys.
+
+## Ingestion Engines
+1. **Reddit Engine (Public Search API)**: A 100% free search index querying public subreddits for side-effects and drug reviews in real-time. Requires no registration or credentials.
+2. **Twitter Engine (advanced_search)**: Connects to a paid Twitter search proxy when configured.
 
 ## API Endpoints
 | Method | Endpoint | Description |
