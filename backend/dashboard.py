@@ -94,6 +94,18 @@ col4.metric("🔒 PII Flagged", stats.get("pii_flagged", 0))
 
 st.divider()
 
+# ---------------- REPORT GENERATOR ----------------
+if st.button("📋 Generate AI Safety Synthesis Report"):
+    with st.spinner("Analyzing safety signals and compiling executive report..."):
+        report_res = safe_get(f"{API}/signals/report")
+        if report_res:
+            st.markdown("### 🧬 AI Pharmacovigilance Safety Report")
+            if report_res.get("mode") == "generative_gemini":
+                st.caption("✨ Synthesized dynamically using Google Gemini 1.5 Flash (Cloud Agent)")
+            else:
+                st.caption("⚙️ Compiled locally using rule-based clinical parser")
+            st.markdown(report_res.get("report"))
+            st.divider()
 
 # ---------------- CONTROLS ----------------
 col_a, col_b, col_c = st.columns([2, 1, 1])
