@@ -29,7 +29,7 @@ def get_signal_feed(
             "id": str(p.id),
             "source": p.source,
             "source_url": p.source_url,
-            "content": p.content if not p.has_pii else "[Content masked — PII detected]",
+            "content": p.content,
             "sentiment": p.sentiment,
             "sentiment_score": p.sentiment_score,
             "is_adverse_event": p.is_adverse_event,
