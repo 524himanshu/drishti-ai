@@ -30,5 +30,6 @@ def run_pipeline(text: str) -> dict:
         "adverse_confidence": adverse_result["adverse_confidence"],
         "shap_explanation": adverse_result["shap_explanation"],
         "has_pii": pii_result["has_pii"],
-        "pii_types": pii_result["pii_types"]
+        "pii_types": pii_result["pii_types"],
+        "masked_content": pii_result["masked_content"]
     }

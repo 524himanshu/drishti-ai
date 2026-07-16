@@ -52,6 +52,8 @@ def process_unprocessed_posts(db: Session) -> dict:
             post.shap_explanation = result["shap_explanation"]
             post.has_pii = result["has_pii"]
             post.pii_types = result["pii_types"]
+            if result["has_pii"]:
+                post.content = result["masked_content"]
             post.is_processed = True
 
             db.commit()

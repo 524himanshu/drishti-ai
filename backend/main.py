@@ -12,9 +12,19 @@ app = FastAPI(title="DrishtiAI", version="1.0")
 app.include_router(signals_router)
 
 def seed_database(db: Session):
-    # If the database is empty, seed 5 realistic patient safety posts
-    if db.query(Post).count() == 0:
-        print("Database is empty. Seeding initial patient safety data...")
+    # Surgical cleanup: delete legacy seed or mock posts to ensure only fresh, correctly redacted data exists
+    legacy_seeds = db.query(Post).filter(
+        (Post.raw_id.like("seed_%")) | (Post.raw_id.like("tw_%"))
+    ).all()
+    if legacy_seeds:
+        print(f"Clearing {len(legacy_seeds)} legacy seed/mock records...")
+        for p in legacy_seeds:
+            db.delete(p)
+        db.commit()
+
+    # Re-seed if no seed posts exist
+    if db.query(Post).filter(Post.raw_id.like("seed_%")).count() == 0:
+        print("Database is empty of seed data. Seeding fresh, DPDP-compliant patient safety records...")
         from datetime import datetime, timedelta
         
         sample_data = [
@@ -22,8 +32,8 @@ def seed_database(db: Session):
                 "raw_id": "seed_001",
                 "source": "reddit",
                 "source_url": "https://www.reddit.com/r/diabetes/comments/seed1",
-                "content": "My name is Amit Verma (Aadhaar: 5544-3322-1100). Started taking Metformin for my Type 2 diabetes last week, but the stomach nausea is absolutely unbearable. Has anyone else experienced this?",
-                "author": "amit_verma",
+                "content": "My name is Amit Sharma (Aadhaar: 4321-8765-0912). Started taking Metformin last week for my diabetes and the nausea is absolutely unbearable. Has anyone else experienced this?",
+                "author": "amit_sharma_9",
                 "timestamp": datetime.utcnow() - timedelta(days=2),
                 "keywords_matched": ["metformin nausea"]
             },
@@ -31,8 +41,8 @@ def seed_database(db: Session):
                 "raw_id": "seed_002",
                 "source": "reddit",
                 "source_url": "https://www.reddit.com/r/askdocs/comments/seed2",
-                "content": "Ozempic side effects are no joke. Constant vomiting and acid reflux. Need to call my physician Dr. Sneha Patil (+91 98765-43210) to ask about stopping this medication.",
-                "author": "health_seeker_india",
+                "content": "Ozempic side effects are no joke. Constant vomiting and stomach pain. Might need to talk to my doctor Dr. Rajesh Patel at +91 98234-56789 about stopping.",
+                "author": "diabetic_warrior",
                 "timestamp": datetime.utcnow() - timedelta(days=1),
                 "keywords_matched": ["ozempic side effects"]
             },
